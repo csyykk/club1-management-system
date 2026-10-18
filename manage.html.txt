@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>社团实践管家 - 管理后台</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="navbar">
+    <div class="logo">
+        <span class="logo-icon">S</span>
+        <span>社团实践管家</span>
+    </div>
+    <div class="nav-menu">
+        <a href="home.html">活动大厅</a>
+        <a href="mypractice.html">我的实践</a>
+        <a href="manage.html" class="active">管理后台</a>
+    </div>
+    <div class="user-avatar">👤</div>
+</header>
+<main class="container">
+    <!--成员管理-->
+    <div class="section">
+        <div class="section-head">
+            <h3>社团成员管理</h3>
+        </div>
+        <div class="form-row">
+            <input type="text" id="mName" placeholder="姓名">
+            <input type="text" id="mDept" placeholder="部门">
+            <input type="text" id="mPhone" placeholder="电话">
+            <button class="btn-blue" onclick="addMember()">新增成员</button>
+        </div>
+        <table class="rank-table" id="memberTable">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>姓名</th>
+                    <th>部门</th>
+                    <th>电话</th>
+                    <th>操作</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+
+    <!--活动管理-->
+    <div class="section">
+        <div class="section-head">
+            <h3>活动管理</h3>
+        </div>
+        <div class="form-row">
+            <input type="text" id="aTitle" placeholder="活动名称">
+            <input type="text" id="aTime" placeholder="时间">
+            <input type="text" id="aInfo" placeholder="详情">
+            <button class="btn-blue" onclick="addActivity()">发布活动</button>
+        </div>
+        <table class="rank-table" id="actTable">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>活动名称</th>
+                    <th>时间</th>
+                    <th>详情</th>
+                    <th>操作</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+
+    <!--公告管理-->
+    <div class="section">
+        <div class="section-head">
+            <h3>公告管理</h3>
+        </div>
+        <div class="form-row">
+            <input type="text" id="nTitle" placeholder="公告标题">
+            <input type="text" id="nContent" placeholder="公告内容">
+            <button class="btn-blue" onclick="addNotice()">发布公告</button>
+        </div>
+        <table class="rank-table" id="noticeTable">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>标题</th>
+                    <th>内容</th>
+                    <th>操作</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+</main>
+<footer class="footer">
+    <p>社团实践管家 v1.0 &nbsp;&nbsp; ©2026 社团实践管家. All rights reserved.</p>
+</footer>
+<script src="script.js"></script>
+<script>
+window.onload = function(){
+    renderMember();
+    renderAct();
+    renderNotice();
+}
+</script>
+</body>
+</html>
+<script>
+checkLogin(); // 增加这一行！
+window.onload = function(){
+    renderActivities();
+    renderRankList();
+}
+</script>

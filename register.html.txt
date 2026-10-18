@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>注册账号</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="login-body">
+    <div class="login-card">
+        <div class="login-logo">
+            <span class="logo-icon">S</span>
+            <h1>注册新账号</h1>
+        </div>
+        <div class="form-item">
+            <label>用户名</label>
+            <input id="regUser" type="text" placeholder="自定义用户名">
+        </div>
+        <div class="form-item">
+            <label>密码</label>
+            <input id="regPwd" type="password" placeholder="自定义密码">
+        </div>
+        <div class="form-item">
+            <label>确认密码</label>
+            <input id="regPwd2" type="password" placeholder="再次输入密码">
+        </div>
+        <button onclick="register()" class="login-btn">注册</button>
+        <p class="tip">已有账号？<a href="index.html">返回登录</a></p>
+    </div>
+<script src="script.js"></script>
+</body>

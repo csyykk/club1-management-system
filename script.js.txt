@@ -1,0 +1,196 @@
+K.I: 10-18 10:46:12
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>社团实践管家 - 登录</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="login-body">
+    <div class="login-card">
+        <div class="login-logo">
+            <span class="logo-icon">S</span>
+            <h1>社团实践管家</h1>
+        </div>
+        <div class="form-item">
+            <label>账号</label>
+            <input id="username" type="text" placeholder="输入账号">
+        </div>
+        <div class="form-item">
+            <label>密码</label>
+            <input id="password" type="password" placeholder="输入密码">
+        </div>
+        <button onclick="login()" class="login-btn">登录</button>
+        <p class="tip">没有账号？<a href="register.html">去注册</a></p>
+    </div>
+<script src="script.js"></script>
+</body>
+</html>
+
+
+K.I: 10-18 10:46:50
+// ========== 用户账号系统 ==========
+// 获取全部注册用户
+function getAllUsers(){
+    let raw = localStorage.getItem("userAll");
+    if(!raw) return {};
+    return JSON.parse(raw);
+}
+// 保存全部用户
+function saveAllUsers(obj){
+    localStorage.setItem("userAll", JSON.stringify(obj));
+}
+
+// 注册函数
+function register(){
+    const name = document.getElementById("regUser").value.trim();
+    const pwd = document.getElementById("regPwd").value;
+    const pwd2 = document.getElementById("regPwd2").value;
+    if(!name){
+        alert("用户名不能为空");
+        return;
+    }
+    if(pwd !== pwd2){
+        alert("两次密码不一致");
+        return;
+    }
+    if(pwd.length < 3){
+        alert("密码至少3位");
+        return;
+    }
+    const userList = getAllUsers();
+    if(userList[name]){
+        alert("用户名已经被占用！");
+        return;
+    }
+    // 新建用户，独立数据
+    userList[name] = {
+        password: pwd,
+        memberList: [],
+        activityList: [],
+        noticeList: [],
+        score:0,
+        count:0
+    };
+    saveAllUsers(userList);
+    alert("注册成功！跳转登录页");
+    window.location.href="index.html";
+}
+
+// 登录
+function login(){
+    const user = document.getElementById("username").value.trim();
+    const pwd = document.getElementById("password").value;
+    const allUser = getAllUsers();
+    if(!allUser[user]){
+        alert("账号不存在，请先注册");
+        return;
+    }
+    if(allUser[user].password !== pwd){
+        alert("密码错误");
+        return;
+    }
+    // 记录当前登录用户
+    localStorage.setItem("currentUser", user);
+    window.location.href="home.html";
+}
+
+// 获取当前登录用户名
+function getCurrentUser(){
+    return localStorage.getItem("currentUser");
+}
+// 获取【当前登录用户】自己的数据
+function getUserData(){
+    const username = getCurrentUser();
+    const allUser = getAllUsers();
+    return allUser[username];
+}
+// 保存当前用户数据
+function saveUserData(data){
+    const username = getCurrentUser();
+    const allUser = getAllUsers();
+    allUser[username] = data;
+    saveAllUsers(allUser);
+}
+
+// 退出登录
+function logout(){
+    localStorage.removeItem("currentUser");
+    window.location.href="index.html";
+}
+
+// ========== 页面加载校验：未登录强制跳转到登录页 ==========
+function checkLogin(){
+    let u = getCurrentUser();
+    if(!u){
+        window.location.href="index.html";
+    }
+}
+
+//===== home 活动大厅 =====
+function renderActivities(){
+    let userData = getUserData();
+    let list = userData.activityList;
+    if(!list) list=[];
+    let box = document.getElementById("activityBox");
+    box.innerHTML = "";
+    list.forEach(item=>{
+        if(item.status == "add"){
+            box.innerHTML += `
+            <div class="activity-card">
+                <div class="card-body" style="text-align:center;padding-top:40px;">
+                    <div style="font-size:32px;color:#2563eb;">+</div>
+                    <p>发布新活动</p>
+                </div>
+            </div>
+            `
+        }else{
+            let btnHtml = item.status=="recruit"
+                ? `<button class="btn-join-blue" onclick="joinAct(${item.id})">立即报名</button>`
+                : `<button class="btn-gray">报名截止</button>`;
+            box.innerHTML += `
+                <div class="activity-card">
+                    <div class="card-img"></div>
+                    <div class="card-body">
+                        <span class="card-tag">${item.score}实践分</span>
+                        <h4 class="card-title">${item.title}</h4>
+                        <p class="card-desc">${item.info}</p>
+                        <div class="card-info">${item.time} &nbsp; ${item.now}/${item.max}人</div>
+                        ${btnHtml}
+                    </div>
+                </div>
+            `
+        }
+    })
+}
+function joinAct(id){
+    alert("报名成功！");
+}
+
+function renderRankList(){
+    let userData = getUserData();
+    let memberList = userData.memberList || [];
+    memberList.sort((a,b)=>b.score - a.score);
+    let table = document.getElementById("rankTable").querySelector("tbody");
+    table.innerHTML = "";
+    memberList.forEach((item,idx)=>{
+        let rankClass = "";
+        if(idx == 0) rankClass = "rank-1";
+        if(idx == 1) rankClass = "rank-2";
+        if(idx == 2) rankClass = "rank-3";
+        table.innerHTML += `
+            <tr>
+                <td class="${rankClass}">${idx+1}</td>
+                <td>${item.name}</td>
+                <td>${item.dept}</td>
+                <td>${item.count}</td>
+                <td class="score-cell">${item.score}</td>
+            </tr>
+        `
+    })
+}
+
+//===== manage 管理后台 =====
+function renderMember(){
+    let userData = getUserData();
+  
