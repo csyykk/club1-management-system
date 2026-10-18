@@ -32,19 +32,7 @@
                     <th>状态</th>
                 </tr>
             </thead>
-            <tbody>
-                <tr>
-                    <td>校园环保志愿者行动</td>
-                    <td>2026-04-15</td>
-                    <td class="score-cell">10</td>
-                    <td>已完成</td>
-                </tr>
-                <tr>
-                    <td>社团招新策划组</td>
-                    <td>2026-09-01</td>
-                    <td class="score-cell">15</td>
-                    <td>已完成</td>
-                </tr>
+            <tbody id="practiceBody">
             </tbody>
         </table>
     </div>
@@ -53,12 +41,29 @@
     <p>社团实践管家 v1.0 &nbsp;&nbsp; ©2026 社团实践管家. All rights reserved.</p>
 </footer>
 <script src="script.js"></script>
-</body>
-</html>
 <script>
-checkLogin(); // 增加这一行！
+checkLogin();
+function loadMyRecord(){
+    let userData = getUserData();
+    let actList = userData.activityList || [];
+    let tbody = document.getElementById("practiceBody");
+    tbody.innerHTML = "";
+    actList.forEach(item=>{
+        if(item.title && item.score){
+            tbody.innerHTML += `
+            <tr>
+                <td>${item.title}</td>
+                <td>${item.time}</td>
+                <td class="score-cell">${item.score}</td>
+                <td>${item.status=="recruit"?"进行中":"已结束"}</td>
+            </tr>
+            `
+        }
+    })
+}
 window.onload = function(){
-    renderActivities();
-    renderRankList();
+    loadMyRecord();
 }
 </script>
+</body>
+</html>
